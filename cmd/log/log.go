@@ -39,7 +39,7 @@ func Init(path string) {
 
 	// Join the file descriptors
 	multiWrite := io.MultiWriter(os.Stderr, logfile)
-	Logger = zerolog.New(multiWrite).With().Timestamp().Caller().Logger()
+	Logger = zerolog.New(multiWrite).With().Timestamp().Logger()
 	//zerolog.TimeFieldFormat = ""
 }
 

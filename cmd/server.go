@@ -24,8 +24,8 @@ import (
 
 // ServerOptions options running server
 type ServerOptions struct {
-	WebPort  string
-	NatsAddr string
+	Port    string
+	NatsURL string
 }
 
 var serverOptions ServerOptions
@@ -35,7 +35,11 @@ var serverCmd = &cobra.Command{
 	Use:   "server [flags]",
 	Short: "Start the server",
 	Long: `
-Start in server mode`,
+Start in server mode.
+
+Te server has a web app for administration 
+and use a external pub-sub server (nats-streaming) 
+for comunicate with the remote devices.`,
 	DisableAutoGenTag: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := configServer(cmd); err != nil {
@@ -49,25 +53,25 @@ func init() {
 	rootCmd.AddCommand(serverCmd)
 
 	flags := serverCmd.Flags()
-	flags.String("web-port", "5400", "listen web port (format: [port])")
-	flags.String("nats-addr", ":4222", "nats streaming server address (format: <ip>[:port])")
+	flags.StringP("port", "p", "5400", "listen port (format: [port])")
+	flags.String("nats-url", "0.0.0.0:4222", "nats streaming server address (format: <ip>[:port])")
 
-	viper.BindPFlag("adbus.server.web-port", flags.Lookup("web-port"))
-	viper.BindPFlag("adbus.server.nats-addr", flags.Lookup("nats-addr"))
+	viper.BindPFlag("adbus.server.port", flags.Lookup("port"))
+	viper.BindPFlag("adbus.server.nats-url", flags.Lookup("nats-url"))
 }
 
 func configServer(cmd *cobra.Command) error {
-	if serverOptions.WebPort = viper.GetString("adbus.server.web-port"); serverOptions.WebPort == "" {
+	if serverOptions.Port = viper.GetString("adbus.server.port"); serverOptions.Port == "" {
 		return errors.New("'web-port' the web server need a port")
 	}
-	if serverOptions.NatsAddr = viper.GetString("adbus.server.nats-addr"); serverOptions.NatsAddr == "" {
-		return errors.New("'nats-addr' the nats server address")
+	if serverOptions.NatsURL = viper.GetString("adbus.server.nats-url"); serverOptions.NatsURL == "" {
+		return errors.New("'nats-url' the nats server address")
 	}
 	return nil
 }
 
 func runServer(opts ServerOptions, gopts GlobalOptions, args []string) error {
-	log.Info().Str("web-port", opts.WebPort).Msg("Info")
+	log.Debug().Caller().Str("port", opts.Port).Msg("Info")
 
 	return nil
 }

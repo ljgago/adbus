@@ -15,26 +15,31 @@
 package cmd // import "github.com/ljgago/adbus/cmd"
 
 import (
+	"errors"
+
 	"github.com/ljgago/adbus/cmd/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-// ServerOptions options running server
+// ClientOptions options running server
 type ClientOptions struct {
-	ServerAddr  string
+	ServerURL   string
 	VideoPlayer string
-	ImagePlayer string
+	ImageViewer string
 }
 
 var clientOptions ClientOptions
 
-// serverCmd represents the subcommand
+// clientCmd represents the subcommand
 var clientCmd = &cobra.Command{
 	Use:   "client [flags]",
 	Short: "Start the client",
 	Long: `
-Start in server mode`,
+Start the client mode.
+
+The client plays videos
+and images from a playlist.`,
 	DisableAutoGenTag: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := configClient(); err != nil {
@@ -48,23 +53,29 @@ func init() {
 	rootCmd.AddCommand(clientCmd)
 
 	flags := clientCmd.Flags()
-	flags.StringVar(&clientOptions.ServerAddr, "server-addr", "", "server address (format: <ip>[:port])")
-	flags.StringVar(&clientOptions.VideoPlayer, "video-player", "", "external video player")
-	flags.StringVar(&clientOptions.ImagePlayer, "image-player", ":", ")")
+	flags.StringVar(&clientOptions.ServerURL, "server-url", "", "server url address (format: <ip>[:port])")
+	flags.StringVar(&clientOptions.VideoPlayer, "video-player", "omxplayer", "external video player")
+	flags.StringVar(&clientOptions.ImageViewer, "image-viewer", "fbi", "external image viewer")
 
-	viper.BindPFlag("adbus.client.server-address", flags.Lookup("address"))
+	viper.BindPFlag("adbus.client.server-url", flags.Lookup("server-url"))
+	viper.BindPFlag("adbus.client.video-player", flags.Lookup("video-player"))
+	viper.BindPFlag("adbus.client.image-viewer", flags.Lookup("image-viewer"))
 }
 
 func configClient() error {
-
-	//if clientOptions.ServerAddr = viper.GetString("adbus.client.servr-address"); clientOptions.ServerAddr == "" {
-	//	log.Error().Msg("server-addr" + clientOptions.ServerAddr)
-	//	return errors.New("'server-addr' need an server address")
-	//}
+	if clientOptions.ServerURL = viper.GetString("adbus.client.server-url"); clientOptions.ServerURL == "" {
+		return errors.New("'server-url' need an server address")
+	}
+	if clientOptions.VideoPlayer = viper.GetString("adbus.client.video-player"); clientOptions.VideoPlayer == "" {
+		return errors.New("'video-player' need an external video player")
+	}
+	if clientOptions.ImageViewer = viper.GetString("adbus.client.image-player"); clientOptions.ImageViewer == "" {
+		return errors.New("'server-url' need an external image viewer ")
+	}
 	return nil
 }
 
 func runClient(opts ClientOptions, gopts GlobalOptions, args []string) error {
-	log.Info().Msg("server-address" + opts.ServerAddr)
+	log.Debug().Caller().Msg("server-url" + opts.ServerURL)
 	return nil
 }
