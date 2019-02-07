@@ -18,6 +18,16 @@ indent_size = 4
 indent_style = tab
 indent_size = 8
 
+#Indentation for JSON files
+[*.json]
+indent_style = space
+indent_size = 2
+
+# Indentation for HTML files
+[*.html]
+indent_style = space
+indent_size = 2
+
 # Indentation for Markdown files
 [*.{markdown,md}]
 indent_style = space
@@ -30,6 +40,11 @@ ident_size = 4
 
 # Indentation for Proto files
 [*.proto]
+indent_style = space
+indent_size = 2
+
+# Identation for vue files
+[*.vue]
 indent_style = space
 indent_size = 2
 

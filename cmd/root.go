@@ -20,22 +20,24 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ljgago/adbus/cmd/log"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/ljgago/adbus/internal/log"
 )
 
-// GlobalOptions are general options for all the application
+// GlobalOptions are global options for all the application
 type GlobalOptions struct {
+	// The config path folder
 	Config string
 }
 
-// Global variables
-var globalOptions GlobalOptions
+// GlobalOpts variables
+var options GlobalOptions
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+// Root represents the base command when called without any subcommands
+var Root = &cobra.Command{
 	Use: "adbus",
 	Short: `
 An advertising kiosk for buses with led displays`,
@@ -45,15 +47,15 @@ An advertising kiosk for buses with led displays`,
 	DisableAutoGenTag: true,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.HelpFunc()(cmd, args)
+	Run: func(command *cobra.Command, args []string) {
+		command.HelpFunc()(command, args)
 	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	if err := Root.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -62,25 +64,30 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&globalOptions.Config, "config", "", "path config file (default is $HOME/.adbus/config.yaml)")
+	pflags := Root.PersistentFlags()
+	pflags.String("config", "", "path config file (default is $HOME/.adbus)")
+
+	viper.BindPFlag("adbus.config", pflags.Lookup("config"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	// Check and/or create config and log path
-	if globalOptions.Config == "" {
+	config := viper.GetString("adbus.config")
+	if config == "" {
 		// Find home directory.
-		home, err := homedir.Dir()
+		config, err := homedir.Dir()
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(-1)
 		}
-		globalOptions.Config = home
+		viper.Set("adbus.config", config)
 	}
 
-	adaptConfigDir(globalOptions.Config)
-	viper.AddConfigPath(globalOptions.Config)
+	adaptConfigDir(config)
+	viper.AddConfigPath(config)
 	viper.SetConfigName(".adbus/config")
+	//configPath := filepath.Join(options.Config, ".adbus")
 
 	//viper.SetEnvPrefix("adbus")
 	// Environment
@@ -89,11 +96,12 @@ func initConfig() {
 	viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
 
-	log.Init(globalOptions.Config)
+	log.Init(config)
 
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Error:", err)
 	}
+
 }
 
 func adaptConfigDir(path string) {

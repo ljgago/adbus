@@ -1,8 +1,0 @@
-adbus:
-  server:
-    nats-url: '127.0.0.1:4222'
-    port: '5400'
-  client:
-    server-url: '127.0.0.1:5400'
-    video-player: 'omxplayer --win 0,0,224,120 '
-    image-player: 'fbset -fb /dev/fb0 -g 224 120 224 120 32; fbi -a --noverbose '

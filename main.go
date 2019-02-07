@@ -14,7 +14,11 @@
 
 package main
 
-import "github.com/ljgago/adbus/cmd"
+import (
+	"github.com/ljgago/adbus/cmd"
+	_ "github.com/ljgago/adbus/cmd/device"
+	_ "github.com/ljgago/adbus/cmd/server"
+)
 
 func main() {
 	cmd.Execute()
