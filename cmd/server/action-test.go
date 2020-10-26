@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package server // import "github.com/ljgago/adbus/cmd/server"
 
 import (
-	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
+	"context"
+
+	types "github.com/gogo/protobuf/types"
+	pb "github.com/ljgago/adbus/pkg/api/v1"
+	"github.com/ljgago/adbus/pkg/log"
 )
 
-func main() {
-	cmd.Execute()
+// ActionTest test a device
+func (srv *deviceService) ActionTest(ctx context.Context, req *pb.ActionTestRequest) (*types.Empty, error) {
+	if err := srv.conn.Publish("action.v1.devices."+req.Id+".test", []byte("test")); err != nil {
+		log.Error().Str("type", "server").Err(err).Msg("")
+		return &types.Empty{}, err
+	}
+	return &types.Empty{}, nil
 }

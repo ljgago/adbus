@@ -24,7 +24,7 @@ indent_style = space
 indent_size = 2
 
 # Indentation for HTML files
-[*.html]
+[*.{html,js}]
 indent_style = space
 indent_size = 2
 

@@ -12,15 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package gateway // import "github.com/ljgago/adbus/pkg/gateway
 
-import (
-	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
-)
-
-func main() {
-	cmd.Execute()
+type Message struct {
+	Action string
+	Data   []byte
 }

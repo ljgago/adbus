@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+// compile with:
+//  protoc --gogofaster_out=. api.proto
 
-import (
-	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
-)
+syntax = "proto3";
 
-func main() {
-	cmd.Execute()
-}
+package api
+

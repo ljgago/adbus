@@ -1,0 +1,18 @@
+[
+  {
+    "file": "video1.mp4", 
+    "time": 2
+  },
+  {
+    "file": "video2.avi", 
+    "time": 2
+  },
+  {
+    "file": "image1.jpg", 
+    "time": 20
+  },
+  {
+    "file": "video2.png",
+    "time": 10
+  }
+]

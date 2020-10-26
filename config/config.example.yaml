@@ -1,0 +1,34 @@
+adbus:
+  device:
+    player:
+      video: 'omxplayer --win 0,0,224,120'
+      image: 'fbset -fb /dev/fb0 -g 224 120 224 120 32; fbi -a --noverbose -1 -t'
+    broker:
+      url: '127.0.0.1:4222'
+      access-key: 'admin' 
+      secret-key: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2'
+    storage:
+      url: '127.0.0.1:4342'
+      access-key: 'admin'
+      secret-key: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2'
+  server:
+    port: '3333'
+    broker:
+      url: '127.0.0.1:4222'
+      access-key: 'admin' 
+      secret-key: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2'
+    storage:
+      url: '127.0.0.1:4342'
+      access-key: 'admin'
+      secret-key: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2'
+    database-url: 'postgresql://maxroach@localhost:26257/bank?ssl=true&sslmode=require&sslrootcert=certs/ca.crt&sslkey=certs/client.maxroach.key&sslcert=certs/client.maxroach.crt'
+    certs: $HOME/.adbus/certs
+  web:
+    port: '3300'
+    api-url: '127.0.0.1:4444'
+    storage:
+      url: '127.0.0.1:4342'
+      access-key: 'admin'
+      secret-key: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2'
+    database-url: 'postgresql://maxroach@localhost:26257/bank?ssl=true&sslmode=require&sslrootcert=certs/ca.crt&sslkey=certs/client.maxroach.key&sslcert=certs/client.maxroach.crt' 
+    certs: $HOME/.adbus/certs

@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package server // import "github.com/ljgago/adbus/pkg/proxy"
 
-import (
-	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
-)
+import "github.com/go-chi/chi"
 
-func main() {
-	cmd.Execute()
+func (p *Proxy) Devices() *chi.Mux {
+	r := chi.NewRouter()
+	r.Get("/", GetAllDevices)
+	r.Get("/{id}", GetDevice)
+	r.Post("/", CreateDevice)
+	r.Delete("/{id}", DeleteDevice)
+	return r
+
 }

@@ -17,30 +17,18 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/ljgago/adbus/internal/log"
+	"github.com/ljgago/adbus/pkg/config"
 )
-
-// GlobalOptions are global options for all the application
-type GlobalOptions struct {
-	// The config path folder
-	Config string
-}
-
-// GlobalOpts variables
-var options GlobalOptions
 
 // Root represents the base command when called without any subcommands
 var Root = &cobra.Command{
 	Use: "adbus",
 	Short: `
-An advertising kiosk for buses with led displays`,
+An distributed advertising kiosk`,
 	Long:              ``,
 	SilenceErrors:     true,
 	SilenceUsage:      true,
@@ -62,65 +50,15 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(config.Init)
 
 	pflags := Root.PersistentFlags()
-	pflags.String("config", "", "path config file (default is $HOME/.adbus)")
+	pflags.String("config", "", "path config file (default is $HOME)")
+	pflags.String("mode", "dev", "development or production mode (dev or prod)")
 
 	viper.BindPFlag("adbus.config", pflags.Lookup("config"))
-}
+	viper.BindPFlag("adbus.mode", pflags.Lookup("mode"))
 
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	// Check and/or create config and log path
-	config := viper.GetString("adbus.config")
-	if config == "" {
-		// Find home directory.
-		config, err := homedir.Dir()
-		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(-1)
-		}
-		viper.Set("adbus.config", config)
-	}
-
-	adaptConfigDir(config)
-	viper.AddConfigPath(config)
-	viper.SetConfigName(".adbus/config")
-	//configPath := filepath.Join(options.Config, ".adbus")
-
-	//viper.SetEnvPrefix("adbus")
-	// Environment
-	// Replace "." and "-" for "_"
-	replacer := strings.NewReplacer(".", "_", "-", "_")
-	viper.SetEnvKeyReplacer(replacer)
-	viper.AutomaticEnv()
-
-	log.Init(config)
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Error:", err)
-	}
-
-}
-
-func adaptConfigDir(path string) {
-	subpath := filepath.Join(path, ".adbus")
-	if _, err := os.Stat(subpath); os.IsNotExist(err) {
-		// subPath no exists, create it
-		if err := os.MkdirAll(subpath, 0755); err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(-1)
-		}
-		// Create config file
-		configpath := filepath.Join(subpath, "config.yaml")
-		file, err := os.Create(configpath)
-		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(-1)
-		}
-		defer file.Close()
-		fmt.Printf("Config path and file created on:\n%s\n%s\n", subpath, configpath)
-		os.Exit(1)
-	}
+	viper.BindEnv("adbus.config", "ADBUS_CONFIG_DIR")
+	viper.BindEnv("adbus.mode", "ADBUS_WORK_MODE")
 }

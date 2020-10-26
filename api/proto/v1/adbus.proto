@@ -1,0 +1,426 @@
+// Copyright © 2019 Leonardo Javier Gago <ljgago@gmail.com>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// compile with:
+// protoc --gogofaster_out=. message.proto
+
+// Use this in you go file:
+// import "github.com/golang/protobuf/ptypes/timestamp"
+// import "google/protobuf/timestamp.proto";
+
+syntax = "proto3";
+
+package pb;
+
+// Example:
+// https://github.com/co3k/protobuf-swagger-example
+
+// for grpc-gateway
+//import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "Adbus Project";
+		version: "0.0.1";
+		contact: {
+		name: "Adbus Project";
+		url: "https://adbus.io";
+		};
+	};
+	schemes: HTTP;
+	schemes: HTTPS;
+	consumes: "application/json";
+	produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BasicAuth";
+      value: {
+        type: TYPE_BASIC;
+      }
+    }
+    security: {
+      // Made up security so we can apply "Bearer <JWT_TOKEN>"
+      key: "BearerJwt";
+      value: {
+        type: TYPE_INVALID;
+      }
+    }
+    security: {
+      key: "HttpKeyAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "http_key";
+      }
+    }
+  }
+  // Default security definition.
+  security: {
+    security_requirement: {
+      key: "BearerJwt";
+      value: {};
+    }
+  }
+};
+
+service DeviceService {
+  // GET /v1/login
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/login"
+    };
+  }
+  // GET /v1/logout
+  rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/logout"
+    };
+  }
+  // GET /v1/devices
+  rpc ListDevices(google.protobuf.Empty) returns (ListDevicesResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      // Either HTTP key in query param or Bearer authentication.
+      security: {
+        security_requirement: {
+          key: "HttpKeyAuth";
+          value: {};
+        }
+        security_requirement: {
+          key: "BearerJwt";
+          value: {};
+        }
+      }
+    };
+  }
+  // POST /v1/devices
+  rpc CreateDevice(CreateDeviceRequest) returns (CreateDeviceResponse) {
+    option (google.api.http) = {
+      post: "/v1/devices"
+      body: "*"
+    };
+  }
+  // GET /v1/devices/{id}
+  rpc GetDevice(GetDeviceRequest) returns (GetDeviceResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/{id}"
+    };
+  }
+  // PUT /v1/devices/{id}
+  rpc UpdateDevice(UpdateDeviceRequest) returns (UpdateDeviceResponse) {
+    option (google.api.http) = {
+      put: "/v1/devices/{id}"
+      body: "*"
+    };
+  }
+  // DELETE /v1/devices/{id}
+  rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse) {
+    option (google.api.http) = {
+      delete: "/v1/devices/{id}"
+    };
+  }
+  // GET /v1/devices/{id}/playlist
+  rpc GetPlaylist(GetPlaylistRequest) returns (GetPlaylistResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/{id}/playlist"
+    };
+  }
+  // PUT /v1/devices/{id}/playlist
+  rpc UpdatePlaylist(UpdatePlaylistRequest) returns (UpdatePlaylistResponse) {
+    option (google.api.http) = {
+      put: "/v1/devices/{id}/playlist"
+      body: "*"
+    };
+  }
+  // GET /v1/devices/groups
+  rpc ListGroups(google.protobuf.Empty) returns (ListGroupsResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/groups"
+    };
+  }
+  // GET /v1/devices/groups/{group_id}
+  rpc ListDevicesByGroup(ListDevicesByGroupRequest) returns (ListDevicesByGroupResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/groups/{group_id}"
+    };
+  }
+  // PUT /v1/devices/groups/{group_id}
+  rpc UpdateDevicesByGroup(UpdateDevicesByGroupRequest) returns (UpdateDevicesByGroupResponse) {
+    option (google.api.http) = {
+      put: "/v1/devices/groups/{group_id}"
+    };
+  }
+  // GET /v1/devices/groups/{group_id}/playlist
+  rpc GetPlaylistByGroup(GetPlaylistByGroupRequest) returns (GetPlaylistByGroupResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/groups/{group_id}/playlist"
+    };
+  }
+  // PUT /v1/devices/groups/{group_id}/playlist
+  rpc UpdatePlaylistByGroup(UpdatePlaylistByGroupRequest) returns (UpdatePlaylistByGroupResponse) {
+    option (google.api.http) = {
+      put: "/v1/devices/groups/{group_id}/playlist"
+    };
+  }
+  // POST /v1/devices/groups/{group_id}/sync
+  rpc ActionSyncByGroup(ActionSyncByGroupRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/devices/groups/{group_id}/sync"
+      body: "*"
+    };
+  }
+  // POST /v1/devices/groups/{group_id}/test
+  rpc ActionTestByGroup(ActionTestByGroupRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/devices/groups/{group_id}/test"
+      body: "*"
+    };
+  }
+  // POST /v1/devices/sync
+  rpc ActionSyncAll(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/devices/sync"
+    };
+  }
+  // POST /v1/devices/{id}/sync
+  rpc ActionSync(ActionSyncRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/devices/{id}/sync"
+      body: "*"
+    };
+  }
+  // POST /v1/devices/test
+  rpc ActionTestAll(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/devices/test"
+      body: "*"
+    };
+  }
+  // POST /v1/devices/{id}/test
+  rpc ActionTest(ActionTestRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/devices/{id}/test"
+      body: "*"
+    };
+  }
+}
+
+
+message User {
+  string name     = 1;
+  string email    = 2;
+  string password = 3;
+}
+
+
+message Item {
+  string file = 1;
+  int32  time = 2;
+}
+
+message Playlist {
+  repeated Item items = 1;
+}
+
+message Location {
+  int64 lat = 1;
+  int64 lng = 2;
+}
+
+message Device {
+  string id         = 1;
+  string name       = 2;
+  string group_id   = 3;
+  string storage    = 4;
+  string player     = 5;
+  string playing    = 6;
+  Playlist playlist = 7;
+  Location location = 8;
+}
+
+message Group {
+  string id               = 1;
+  repeated Device devices = 2;
+}
+
+
+// POST /v1/login
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+// GET /v1/devices
+//message ListDevicesRequest {}
+
+message ListDevicesResponse {
+  repeated Device devices = 1;
+}
+
+// POST /v1/devices
+message CreateDeviceRequest {
+  string id     = 1;
+  Device device = 2;
+}
+message CreateDeviceResponse {
+  Device device = 1;
+}
+
+// GET /v1/devices/{id}
+message GetDeviceRequest {
+  string id = 1;
+}
+message GetDeviceResponse {
+  Device device = 1;
+}
+
+// PUT /v1/devices/{id}
+message UpdateDeviceRequest {
+  string id     = 1;
+  Device device = 2;
+}
+message UpdateDeviceResponse {
+  Device device = 1;
+}
+
+// DELETE /v1/devices/{id}
+message DeleteDeviceRequest {
+  string id = 1;
+}
+message DeleteDeviceResponse {
+  Device device = 1;
+}
+
+// GET /v1/devices/{id}/playlist
+message GetPlaylistRequest {
+  string id = 1;
+}
+message GetPlaylistResponse {
+  Playlist playlist = 1;
+}
+
+// PUT /v1/devices/{id}/playlist
+message UpdatePlaylistRequest {
+  string id         = 1;
+  Playlist playlist = 2;
+}
+message UpdatePlaylistResponse {
+  Playlist playlist = 1;
+}
+
+// POST /v1/devices/{id}/sync
+message ActionSyncRequest {
+  string id = 1;
+}
+
+// POST /v1/devices/{id}/test
+message ActionTestRequest {
+  string id = 1;
+}
+
+// GET /v1/devices/groups
+// message ListGroupsRequest {
+//   string id = 1;
+// }
+message ListGroupsResponse {
+  repeated Group groups = 1;
+}
+
+// GET /v1/devices/groups/{group_id}
+message ListDevicesByGroupRequest {
+  string group_id = 1;
+}
+message ListDevicesByGroupResponse {
+  repeated Device devices = 1;
+}
+
+// PUT /v1/devices/groups/{group_id}
+message UpdateDevicesByGroupRequest {
+  string group_id = 1;
+}
+message UpdateDevicesByGroupResponse {
+  repeated Device devices = 1;
+}
+
+// GET /v1/devices/groups/{group_id}/playlist
+message GetPlaylistByGroupRequest {
+  string group_id = 1;
+}
+message GetPlaylistByGroupResponse {
+  Playlist playlist = 1;
+}
+
+// PUT /v1/devices/groups/{group_id}/playlist
+message UpdatePlaylistByGroupRequest {
+  string group_id   = 1;
+  Playlist playlist = 2;
+}
+message UpdatePlaylistByGroupResponse {
+  Playlist playlist = 1;
+}
+
+message ActionSyncByGroupRequest {
+  string group_id = 1;
+}
+
+message ActionTestByGroupRequest {
+  string group_id = 1;
+}
+
+
+message Status {
+  string id             = 1;
+  string playingNow     = 2;
+  Playlist playlist     = 3;
+  repeated string files = 4;
+  bool test             = 5;
+}
+
+message Sync {}
+
+// Used for internal message system
+// Message represent the message used for communication between the server and the devices.
+message Message {
+  string id        = 1; // id
+  string subject   = 2; // Subject
+  string reply     = 3; // Reply
+  uint64 sequence  = 5; // Secuence
+  int64  timestamp = 7; // Timestamp
+  bytes  data      = 8; // Data
+}
+
+
+
+
+message Status2 {
+  string          name         = 1; // Name of device
+  string          playing      = 2; // Playing media currently
+  Item            playlist     = 3; // Current playlist
+  repeated string files        = 4; // Media files
+  int64           lastSync     = 5; // Time of last sync files
+}
+
+message Test {
+  bool enabled = 1;
+}
+

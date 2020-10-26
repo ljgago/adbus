@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package io
 
-import (
-	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
-)
+import "os"
 
-func main() {
-	cmd.Execute()
+type FileOperte interface {
+	Open(name string) (*File, error)
+	ReadDir(dirname string) ([]os.FileInfo, error)
 }

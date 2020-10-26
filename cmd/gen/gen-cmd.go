@@ -12,15 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package gen // import "github.com/ljgago/adbus/cmd/gen"
 
 import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+
 	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
+	"github.com/ljgago/adbus/pkg/uuid"
 )
 
-func main() {
-	cmd.Execute()
+// commandDefine represents the subcommand
+var commandDefine = &cobra.Command{
+	Use:   "gen [flags]",
+	Short: "Generates a Device ID",
+	Long: `
+Generates a Device ID in
+UUID format form a MAC address.`,
+	DisableAutoGenTag: true,
+	Run: func(command *cobra.Command, args []string) {
+		runGen(args)
+	},
+}
+
+func init() {
+	cmd.Root.AddCommand(commandDefine)
+}
+
+func runGen(args []string) {
+	id := uuid.GenerateDeviceID()
+	fmt.Println(id)
 }

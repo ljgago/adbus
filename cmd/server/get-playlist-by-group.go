@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package server // import "github.com/ljgago/adbus/cmd/server"
 
 import (
-	"github.com/ljgago/adbus/cmd"
-	_ "github.com/ljgago/adbus/cmd/device"
-	_ "github.com/ljgago/adbus/cmd/gen"
-	_ "github.com/ljgago/adbus/cmd/server"
+	"context"
+
+	pb "github.com/ljgago/adbus/pkg/api/v1"
 )
 
-func main() {
-	cmd.Execute()
+// GetPlaylistByGroup get the playlist of a group
+func (srv *deviceService) GetPlaylistByGroup(ctx context.Context, req *pb.GetPlaylistByGroupRequest) (*pb.GetPlaylistByGroupResponse, error) {
+	var (
+		//wg   sync.WaitGroup
+		//m    sync.Mutex
+		resp pb.GetPlaylistByGroupResponse
+	)
+
+	// TODO get the playlist form database
+
+	return &resp, nil
 }

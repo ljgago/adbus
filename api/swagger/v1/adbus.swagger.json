@@ -1,0 +1,815 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Adbus Project",
+    "version": "0.0.1",
+    "contact": {
+      "name": "Adbus Project",
+      "url": "https://adbus.io"
+    }
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/devices": {
+      "get": {
+        "summary": "GET /v1/devices",
+        "operationId": "ListDevices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListDevicesResponse"
+            }
+          }
+        },
+        "tags": [
+          "DeviceService"
+        ],
+        "security": [
+          {
+            "BearerJwt": [],
+            "HttpKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "POST /v1/devices",
+        "operationId": "CreateDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/groups": {
+      "get": {
+        "summary": "GET /v1/devices/groups",
+        "operationId": "ListGroups",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListGroupsResponse"
+            }
+          }
+        },
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/groups/{group_id}": {
+      "get": {
+        "summary": "GET /v1/devices/groups/{group_id}",
+        "operationId": "ListDevicesByGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListDevicesByGroupResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      },
+      "put": {
+        "summary": "PUT /v1/devices/groups/{group_id}",
+        "operationId": "UpdateDevicesByGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateDevicesByGroupResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/groups/{group_id}/playlist": {
+      "get": {
+        "summary": "GET /v1/devices/groups/{group_id}/playlist",
+        "operationId": "GetPlaylistByGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPlaylistByGroupResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      },
+      "put": {
+        "summary": "PUT /v1/devices/groups/{group_id}/playlist",
+        "operationId": "UpdatePlaylistByGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePlaylistByGroupResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/groups/{group_id}/sync": {
+      "post": {
+        "summary": "POST /v1/devices/groups/{group_id}/sync",
+        "operationId": "ActionSyncByGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbActionSyncByGroupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/groups/{group_id}/test": {
+      "post": {
+        "summary": "POST /v1/devices/groups/{group_id}/test",
+        "operationId": "ActionTestByGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbActionTestByGroupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/sync": {
+      "post": {
+        "summary": "POST /v1/devices/sync",
+        "operationId": "ActionSyncAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/test": {
+      "post": {
+        "summary": "POST /v1/devices/test",
+        "operationId": "ActionTestAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/{id}": {
+      "get": {
+        "summary": "GET /v1/devices/{id}",
+        "operationId": "GetDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      },
+      "delete": {
+        "summary": "DELETE /v1/devices/{id}",
+        "operationId": "DeleteDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeleteDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      },
+      "put": {
+        "summary": "PUT /v1/devices/{id}",
+        "operationId": "UpdateDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateDeviceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateDeviceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/{id}/playlist": {
+      "get": {
+        "summary": "GET /v1/devices/{id}/playlist",
+        "operationId": "GetPlaylist",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPlaylistResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      },
+      "put": {
+        "summary": "PUT /v1/devices/{id}/playlist",
+        "operationId": "UpdatePlaylist",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePlaylistResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdatePlaylistRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/{id}/sync": {
+      "post": {
+        "summary": "POST /v1/devices/{id}/sync",
+        "operationId": "ActionSync",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbActionSyncRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/devices/{id}/test": {
+      "post": {
+        "summary": "POST /v1/devices/{id}/test",
+        "operationId": "ActionTest",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbActionTestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "summary": "GET /v1/login",
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbLoginResponse"
+            }
+          }
+        },
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    },
+    "/v1/logout": {
+      "post": {
+        "summary": "GET /v1/logout",
+        "operationId": "Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "tags": [
+          "DeviceService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pbActionSyncByGroupRequest": {
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "type": "string"
+        }
+      }
+    },
+    "pbActionSyncRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "POST /v1/devices/{id}/sync"
+    },
+    "pbActionTestByGroupRequest": {
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "type": "string"
+        }
+      }
+    },
+    "pbActionTestRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "POST /v1/devices/{id}/test"
+    },
+    "pbCreateDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "device": {
+          "$ref": "#/definitions/pbDevice"
+        }
+      },
+      "title": "POST /v1/devices"
+    },
+    "pbCreateDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "$ref": "#/definitions/pbDevice"
+        }
+      }
+    },
+    "pbDeleteDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "$ref": "#/definitions/pbDevice"
+        }
+      }
+    },
+    "pbDevice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "group_id": {
+          "type": "string"
+        },
+        "storage": {
+          "type": "string"
+        },
+        "player": {
+          "type": "string"
+        },
+        "playing": {
+          "type": "string"
+        },
+        "playlist": {
+          "$ref": "#/definitions/pbPlaylist"
+        },
+        "location": {
+          "$ref": "#/definitions/pbLocation"
+        }
+      }
+    },
+    "pbGetDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "$ref": "#/definitions/pbDevice"
+        }
+      }
+    },
+    "pbGetPlaylistByGroupResponse": {
+      "type": "object",
+      "properties": {
+        "playlist": {
+          "$ref": "#/definitions/pbPlaylist"
+        }
+      }
+    },
+    "pbGetPlaylistResponse": {
+      "type": "object",
+      "properties": {
+        "playlist": {
+          "$ref": "#/definitions/pbPlaylist"
+        }
+      }
+    },
+    "pbGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbDevice"
+          }
+        }
+      }
+    },
+    "pbItem": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "pbListDevicesByGroupResponse": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbDevice"
+          }
+        }
+      }
+    },
+    "pbListDevicesResponse": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbDevice"
+          }
+        }
+      }
+    },
+    "pbListGroupsResponse": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbGroup"
+          }
+        }
+      },
+      "title": "GET /v1/devices/groups\nmessage ListGroupsRequest {\n  string id = 1;\n}"
+    },
+    "pbLocation": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "string",
+          "format": "int64"
+        },
+        "lng": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "pbLoginResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "pbPlaylist": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbItem"
+          }
+        }
+      }
+    },
+    "pbUpdateDeviceRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "device": {
+          "$ref": "#/definitions/pbDevice"
+        }
+      },
+      "title": "PUT /v1/devices/{id}"
+    },
+    "pbUpdateDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "$ref": "#/definitions/pbDevice"
+        }
+      }
+    },
+    "pbUpdateDevicesByGroupResponse": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbDevice"
+          }
+        }
+      }
+    },
+    "pbUpdatePlaylistByGroupResponse": {
+      "type": "object",
+      "properties": {
+        "playlist": {
+          "$ref": "#/definitions/pbPlaylist"
+        }
+      }
+    },
+    "pbUpdatePlaylistRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "playlist": {
+          "$ref": "#/definitions/pbPlaylist"
+        }
+      },
+      "title": "PUT /v1/devices/{id}/playlist"
+    },
+    "pbUpdatePlaylistResponse": {
+      "type": "object",
+      "properties": {
+        "playlist": {
+          "$ref": "#/definitions/pbPlaylist"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "BasicAuth": {
+      "type": "basic"
+    },
+    "BearerJwt": {
+      "type": ""
+    },
+    "HttpKeyAuth": {
+      "type": "apiKey",
+      "name": "http_key",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "BearerJwt": []
+    }
+  ]
+}
